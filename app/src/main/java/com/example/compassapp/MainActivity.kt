@@ -21,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -35,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.compassapp.ui.CompassViewModel
 import com.example.compassapp.ui.theme.CompassAppTheme
+import com.example.compassapp.utils.SharedPreferenceUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -53,12 +55,29 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
+
+
+
 @Composable
 fun CompassScreen(compassViewModel: CompassViewModel) {
     var textInputUI by remember { mutableStateOf("Text input for request") }
-    val textEvery10Output: String by compassViewModel.resultEvery10Text.observeAsState("")
-    val textWCOutput: String by compassViewModel.resultWCText.observeAsState("")
+    var textEvery10Output by remember { mutableStateOf("") }
+    var textWCOutput by remember { mutableStateOf("") }
 
+    val textEvery10OutputState: String by compassViewModel.resultEvery10Text.observeAsState("")
+    val textWCOutputState: String by compassViewModel.resultWCText.observeAsState("")
+
+    LaunchedEffect(Unit) { // Se ejecuta una vez al crearla pantalla
+        compassViewModel.preloadCachedData()
+    }
+    LaunchedEffect(key1 = textEvery10OutputState) {
+        textEvery10Output = textEvery10OutputState
+    }
+
+    LaunchedEffect(key1 = textWCOutputState) {
+        textWCOutput = textWCOutputState
+    }
     Column(
         modifier = Modifier
             .wrapContentHeight()
