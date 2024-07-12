@@ -9,4 +9,8 @@ class CompassRepository @Inject constructor(private val api : CompassService) {
     suspend fun every10thCharacter(text: String): ExtractResponse? {
         return api.every10thCharacter(text)
     }
+
+    suspend fun wordCounter(text: String):  Map<String, Int>  {
+        return api.wordCounter(text)
+    }
 }

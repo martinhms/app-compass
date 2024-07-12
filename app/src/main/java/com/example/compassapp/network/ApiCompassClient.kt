@@ -11,4 +11,6 @@ interface ApiCompassClient {
     @POST("api/every10thCharacter")
     suspend fun every10thCharacter(@Body request: TextRequest): Response<ExtractResponse>
 
+    @POST("api/wordCounter")
+    suspend fun wordCounter(@Body request: TextRequest): Response<Map<String, Int>>
 }

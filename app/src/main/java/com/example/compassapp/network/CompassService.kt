@@ -20,4 +20,17 @@ class CompassService @Inject constructor(private val apiCompassClient: ApiCompas
             }
         }
     }
+
+    suspend fun wordCounter(text: String): Map<String, Int> {
+        return withContext(Dispatchers.IO) {
+            val textRequest = TextRequest(text)
+            val resEvery10thCharacter = apiCompassClient.wordCounter(textRequest)
+            println("Response: $resEvery10thCharacter")
+            if (resEvery10thCharacter.isSuccessful) {
+                resEvery10thCharacter.body() ?: emptyMap()
+            } else {
+                emptyMap()
+            }
+        }
+    }
 }
