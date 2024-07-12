@@ -13,18 +13,23 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.compassapp.ui.CompassViewModel
 import com.example.compassapp.ui.theme.CompassAppTheme
-import com.example.compassapp.ui.theme.CompassViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val compassViewModel : CompassViewModel by viewModels()
+    private val compassViewModel: CompassViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,21 +44,25 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun CompassScreen(compassViewModel: CompassViewModel) {
+    var textInputUI by remember { mutableStateOf("") }
+    val textOutput: String  by compassViewModel.resultText.observeAsState("")
+
     Column(
         modifier = Modifier
             .wrapContentHeight()
-            .fillMaxWidth().padding(top = 50.dp),
+            .fillMaxWidth()
+            .padding(top = 50.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Results",
+            text = textOutput,
             modifier = Modifier
                 .padding(20.dp)
                 .wrapContentHeight()
         )
 
         TextField(
-            value = "Enter text", onValueChange = { }, singleLine = false,
+            value = textInputUI, onValueChange = { textInputUI = it}, singleLine = false,
             maxLines = 10,
             modifier = Modifier
                 .padding(20.dp)
@@ -62,8 +71,7 @@ fun CompassScreen(compassViewModel: CompassViewModel) {
         )
         Button(
             onClick = {
-                // onTaskAdded(task)
-                //  task = ""
+                compassViewModel.onRequestRunned(textInputUI)
             }, modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp)
