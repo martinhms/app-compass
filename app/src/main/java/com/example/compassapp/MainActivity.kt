@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,22 +18,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.compassapp.ui.theme.CompassAppTheme
+import com.example.compassapp.ui.theme.CompassViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val compassViewModel : CompassViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             CompassAppTheme {
-                CompassScreen(
-                )
+                CompassScreen(compassViewModel)
             }
         }
     }
 }
 
 @Composable
-fun CompassScreen() {
+fun CompassScreen(compassViewModel: CompassViewModel) {
     Column(
         modifier = Modifier
             .wrapContentHeight()
@@ -71,6 +77,6 @@ fun CompassScreen() {
 @Composable
 fun GreetingPreview() {
     CompassAppTheme {
-        CompassScreen()
+        //CompassScreen(compassViewModel)
     }
 }
