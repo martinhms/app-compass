@@ -1,6 +1,5 @@
 package com.example.compassapp.ui
 
-import android.app.Application
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -22,33 +21,51 @@ class CompassViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
+    private val _textInput = MutableLiveData("")
+    val textInput: LiveData<String> = _textInput
+
     private val _resultEvery10Text = MutableLiveData("")
     val resultEvery10Text: LiveData<String> = _resultEvery10Text
 
     private val _resultWCText = MutableLiveData(String())
     val resultWCText: LiveData<String> = _resultWCText
 
-
-    fun onRequestRunned(textInput: String) {
-
-        viewModelScope.launch {
-            val resultEvery10 = every10UseCase.invoke(textInput)?.characters.toString()
-            val resultWordCounter = wordCounterUseCase.invoke(textInput).characters.toString()
-            _resultEvery10Text.value = resultEvery10
-            _resultWCText.value = resultWordCounter
-        }
-
+    init {
+        loadSavedData()
     }
 
-    fun preloadCachedData() {
-        val cacheEvery = sharedPreferenceUtils.getCachedEvery10thCharacter(context = context)
-        val cacheWC = sharedPreferenceUtils.getCachedWordCount(context = context)
-        if (cacheEvery != null) {
-            _resultEvery10Text.value = cacheEvery.toString()
+    fun onTextInputChanged(newText: String) {
+        _textInput.value = newText
+        saveCurrentData()
+    }
+
+    fun onRequestRunned() {
+
+        viewModelScope.launch {
+            val inputText = _textInput.value ?: ""
+            val resultEvery10 = every10UseCase.invoke(inputText)?.characters.toString()
+            val resultWordCounter = wordCounterUseCase.invoke(inputText).characters.toString()
+            _resultEvery10Text.value = resultEvery10
+            _resultWCText.value = resultWordCounter
+            saveCurrentData()
         }
-        if (cacheWC != null) {
-            _resultWCText.value = cacheWC.toString()
-        }
+    }
+
+    private fun loadSavedData() {
+        val (loadedTextInput, loadedEvery10thResult, loadedWordCountResult) =
+            sharedPreferenceUtils.loadCompassData(context)
+        _textInput.value = loadedTextInput
+        _resultEvery10Text.value = loadedEvery10thResult
+        _resultWCText.value = loadedWordCountResult
+    }
+
+    private fun saveCurrentData() {
+        sharedPreferenceUtils.saveCompassData(
+            context,
+            _textInput.value ?: "",
+            _resultEvery10Text.value ?: "",
+            _resultWCText.value ?: ""
+        )
     }
 
 }
