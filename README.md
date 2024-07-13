@@ -31,7 +31,8 @@ The application should:
 
 4. The code should be unit tested
 
-5. ![image](https://github.com/user-attachments/assets/db9866b2-8e0e-4bd6-9ef3-1ec44a67e8b5)
+5. ![image](https://github.com/user-attachments/assets/7b38ba05-fcc0-4b5a-a774-26243acdf3d9)
+
 
 
    
