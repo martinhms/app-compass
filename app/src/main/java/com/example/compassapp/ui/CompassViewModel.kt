@@ -5,12 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.compassapp.R
 import com.example.compassapp.usecases.Every10UseCase
 import com.example.compassapp.usecases.WordCounterUseCase
 import com.example.compassapp.utils.SharedPreferenceUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
+import java.net.ConnectException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,6 +32,9 @@ class CompassViewModel @Inject constructor(
     private val _resultWCText = MutableLiveData(String())
     val resultWCText: LiveData<String> = _resultWCText
 
+    private val _errorMessage = MutableLiveData("")
+    val errorMessage: LiveData<String> = _errorMessage
+
     init {
         loadSavedData()
     }
@@ -42,12 +47,19 @@ class CompassViewModel @Inject constructor(
     fun onRequestRunned() {
 
         viewModelScope.launch {
-            val inputText = _textInput.value ?: ""
-            val resultEvery10 = every10UseCase.invoke(inputText)?.characters.toString()
-            val resultWordCounter = wordCounterUseCase.invoke(inputText).characters.toString()
-            _resultEvery10Text.value = resultEvery10
-            _resultWCText.value = resultWordCounter
-            saveCurrentData()
+            try{
+                val inputText = _textInput.value ?: ""
+                val resultEvery10 = every10UseCase.invoke(inputText)?.characters.toString()
+                val resultWordCounter = wordCounterUseCase.invoke(inputText).characters.toString()
+                _resultEvery10Text.value = resultEvery10
+                _resultWCText.value = resultWordCounter
+                _errorMessage.value = null
+                saveCurrentData()
+            }catch (e:ConnectException){
+                _errorMessage.value = context.getString(R.string.ERROR_SERVICE_CONNECTION)
+
+            }
+
         }
     }
 
