@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">CompassApp</string>
+    <string name="ERROR_SERVICE_CONNECTION">Error: Compass api is not running.</string>
+    <string name="every10thcharacter_result">Every10thCharacter Result:</string>
+    <string name="run_requests">Run requests</string>
+    <string name="enter_the_text">Enter the text</string>
+    <string name="wordcounter_result">WordCounter Result:</string>
 </resources>

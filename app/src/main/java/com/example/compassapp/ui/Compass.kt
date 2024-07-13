@@ -2,12 +2,10 @@ package com.example.compassapp.ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -15,16 +13,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -32,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -43,6 +41,7 @@ fun Compass(compassViewModel: CompassViewModel) {
     val textInputState by compassViewModel.textInput.observeAsState("")
     val textEvery10OutputState: String by compassViewModel.resultEvery10Text.observeAsState("")
     val textWCOutputState: String by compassViewModel.resultWCText.observeAsState("")
+    val errorMessage by compassViewModel.errorMessage.observeAsState()
 
     Column(
         modifier = Modifier
@@ -56,9 +55,9 @@ fun Compass(compassViewModel: CompassViewModel) {
             modifier = Modifier
                 .size(150.dp)
         )
-        Every10OutputComponnent(textEvery10OutputState)
+        Every10OutputComponnent(textEvery10OutputState,errorMessage)
         Spacer(modifier = Modifier.padding(10.dp))
-        WordCCounterComponent(textWCOutputState)
+        WordCCounterComponent(textWCOutputState,errorMessage)
         Spacer(modifier = Modifier.padding(10.dp))
         InputsComponent(
             textInputState = textInputState,
@@ -69,7 +68,7 @@ fun Compass(compassViewModel: CompassViewModel) {
 }
 
 @Composable
-fun Every10OutputComponnent(textEvery10OutputState: String) {
+fun Every10OutputComponnent(textEvery10OutputState: String, errorMessage: String?) {
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -79,50 +78,54 @@ fun Every10OutputComponnent(textEvery10OutputState: String) {
         )
     ) {
         Text(
-            text = "Every10thCharacter Result:",
+            text = stringResource(R.string.every10thcharacter_result),
             modifier = Modifier.align(Alignment.CenterHorizontally),
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = Color.Black
+
         )
         HorizontalDivider(
             thickness = 2.dp,
-            color = Color.LightGray
+            color = Color.Black
         )
         Text(
-            text = textEvery10OutputState,
+            text = errorMessage ?: textEvery10OutputState,
             modifier = Modifier
                 .padding(20.dp)
                 .wrapContentHeight(),
-            style = MaterialTheme.typography.bodyMedium
-
+            style = MaterialTheme.typography.bodyMedium,
+            color = Color.Black
         )
     }
 }
 
 @Composable
-fun WordCCounterComponent(textWCOutputState: String) {
+fun WordCCounterComponent(textWCOutputState: String, errorMessage: String?) {
     Card(
         modifier = Modifier
             .fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Text(
-            text = "WordCounter Result:",
+            text = stringResource(R.string.wordcounter_result),
             modifier = Modifier.align(Alignment.CenterHorizontally),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
         )
         HorizontalDivider(
             thickness = 2.dp,
-            color = Color.LightGray
+            color = Color.Black
         )
         Text(
-            text = textWCOutputState,
+            text = errorMessage ?: textWCOutputState,
             modifier = Modifier.padding(20.dp),
             style = MaterialTheme.typography.bodyMedium,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = Color.Black
         )
     }
 }
@@ -145,9 +148,10 @@ fun InputsComponent(
         shape = RoundedCornerShape(8.dp),
         placeholder = {
             Text(
-                "Enter the text",
-                style = MaterialTheme.typography.bodyLarge.copy(color = Color.Black), // Cambia el color del hint
-                fontStyle = FontStyle.Italic
+                stringResource(R.string.enter_the_text),
+                style = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
+                fontStyle = FontStyle.Italic,
+                color = Color.White
             )
         },
     )
@@ -156,17 +160,24 @@ fun InputsComponent(
             onRequestRunned()
         }, modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 20.dp)
+            .padding(top = 20.dp),
+        colors = ButtonColors(
+            containerColor = Color.Black,
+            disabledContentColor = Color.LightGray,
+            contentColor = Color.White,
+            disabledContainerColor = Color.White
+        )
     ) {
         Icon(
             imageVector = Icons.Filled.PlayArrow,
-            contentDescription = "Run requests",
+            contentDescription = stringResource(R.string.run_requests),
             modifier = Modifier.size(ButtonDefaults.IconSize)
         )
         Spacer(Modifier.size(ButtonDefaults.IconSpacing))
         Text(
             "Run",
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold
         )
     }
 }
