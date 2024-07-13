@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -83,19 +84,21 @@ fun Every10OutputComponnent(textEvery10OutputState: String) {
             modifier = Modifier.align(Alignment.CenterHorizontally),
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = Color.Black
+
         )
         HorizontalDivider(
             thickness = 2.dp,
-            color = Color.LightGray
+            color = Color.Black
         )
         Text(
             text = textEvery10OutputState,
             modifier = Modifier
                 .padding(20.dp)
                 .wrapContentHeight(),
-            style = MaterialTheme.typography.bodyMedium
-
+            style = MaterialTheme.typography.bodyMedium,
+            color = Color.Black
         )
     }
 }
@@ -112,17 +115,19 @@ fun WordCCounterComponent(textWCOutputState: String) {
             modifier = Modifier.align(Alignment.CenterHorizontally),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
         )
         HorizontalDivider(
             thickness = 2.dp,
-            color = Color.LightGray
+            color = Color.Black
         )
         Text(
             text = textWCOutputState,
             modifier = Modifier.padding(20.dp),
             style = MaterialTheme.typography.bodyMedium,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = Color.Black
         )
     }
 }
@@ -147,7 +152,8 @@ fun InputsComponent(
             Text(
                 "Enter the text",
                 style = MaterialTheme.typography.bodyLarge.copy(color = Color.Black), // Cambia el color del hint
-                fontStyle = FontStyle.Italic
+                fontStyle = FontStyle.Italic,
+                color = Color.White
             )
         },
     )
@@ -156,7 +162,13 @@ fun InputsComponent(
             onRequestRunned()
         }, modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 20.dp)
+            .padding(top = 20.dp),
+        colors = ButtonColors(
+            containerColor = Color.Black,
+            disabledContentColor = Color.LightGray,
+            contentColor = Color.White,
+            disabledContainerColor = Color.White
+        )
     ) {
         Icon(
             imageVector = Icons.Filled.PlayArrow,
